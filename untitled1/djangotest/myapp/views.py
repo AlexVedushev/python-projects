@@ -1,16 +1,24 @@
 from django.shortcuts import render
+from django.db import models
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from library.df_response_lib import *
+from .models import RoomReservationModel
+from datetime import datetime
 import json
 
 def home(request):
+    startTime = datetime.now().strftime("%A, %d. %B %Y %I:%M%p")
+    print(startTime)
+    model = RoomReservationModel(startTime=startTime, endTime=startTime)
+    model.startTime = datetime.now()
+    model.endTime = datetime.now()
+    print(model)
     return HttpResponse('Hello World')
 
 @csrf_exempt
 def webhook(request):
     req = json.loads(request.body)
-    print(req)
     action = req.get('queryResult').get('action')
     fulfillmentText = {'fulfillmentText': 'This is Django test response from webhook.'}
 
